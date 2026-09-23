@@ -1,0 +1,725 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <title>مدیریت کاربران | پنل مدیریت مالی</title>
+
+    <meta name="description" content="مدیریت کاربران، مشتریان و پرونده‌های مالی و کیف پول در پنل مدیریت مالی" />
+
+    <!-- Prevent dark mode flash -->
+    <script>
+        if (
+            localStorage.theme === "dark" ||
+            (!("theme" in localStorage) &&
+                window.matchMedia("(prefers-color-scheme: dark)").matches)
+        ) {
+            document.documentElement.classList.add("dark");
+        } else {
+            document.documentElement.classList.remove("dark");
+        }
+    </script>
+
+    <!-- Sahel Font CDN -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sahel-font@3.4.0/dist/font-face.min.css" integrity="sha384-QM6N0qOCGo9ad2o1Onud38zTA+6afi5l7I7ciDAgSzLhKOdg7xyHuJl+OZJgMpPg" crossorigin="anonymous" />
+
+    <!-- Font Awesome CDN -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@7.2.0/css/all.min.css" integrity="sha384-EXatlQyrOJgDaM9/a74ArMzy7/2bTMSrZj8ID1IPeVmc3GncfCugefCFWSLj8JL/" crossorigin="anonymous" />
+
+    <!-- Tailwind Output CSS -->
+    <link rel="stylesheet" href="../assets/css/output.css" />
+
+    <!-- Dashboard Custom CSS -->
+    <link rel="stylesheet" href="../assets/css/dashboard.css" />
+
+    <!-- Animated Theme Toggle -->
+    <link rel="stylesheet" href="../assets/icons/toggle.css" />
+</head>
+
+<body class="font-sans min-h-screen antialiased transition-colors">
+
+    <!-- Mobile Overlay -->
+    <div id="overlay" class="mobile-overlay hidden"></div>
+
+    <!-- Sidebar -->
+    <aside id="sidebar"
+        class="app-sidebar fixed right-0 top-0 z-50 h-screen w-72 translate-x-full px-4 py-5 transition-transform lg:translate-x-0">
+        <!-- Sidebar Header -->
+        <div class="mb-8 flex items-center justify-between">
+            <div class="flex items-center gap-3">
+                <div class="sidebar-logo">
+                    <i class="fa-solid fa-layer-group" aria-hidden="true"></i>
+                </div>
+
+                <div>
+                    <h1 class="sidebar-brand-title">پنل مدیریت مالی</h1>
+                    <p class="sidebar-brand-subtitle">سامانه یکپارچه مالی</p>
+                </div>
+            </div>
+
+            <button id="closeSidebar" type="button" class="sidebar-icon-button lg:hidden" aria-label="بستن منوی کناری"
+                title="بستن منوی کناری">
+                <i class="fa-solid fa-xmark" aria-hidden="true"></i>
+            </button>
+        </div>
+
+        <!-- Navigation -->
+        <nav class="flex flex-col gap-2 pb-56" aria-label="منوی اصلی">
+            <a href="dashboard.html" class="nav-link">
+                <i class="fa-solid fa-chart-pie" aria-hidden="true"></i>
+                <span>داشبورد</span>
+            </a>
+
+            <a href="orders.html" class="nav-link">
+                <i class="fa-solid fa-bag-shopping" aria-hidden="true"></i>
+                <span>سفارش‌ها</span>
+            </a>
+
+            <a href="users.html" class="nav-link active" aria-current="page">
+                <i class="fa-solid fa-users" aria-hidden="true"></i>
+                <span>کاربران</span>
+            </a>
+
+            <a href="transactions.html" class="nav-link">
+                <i class="fa-solid fa-credit-card" aria-hidden="true"></i>
+                <span>تراکنش‌ها</span>
+            </a>
+
+            <a href="reports.html" class="nav-link">
+                <i class="fa-solid fa-chart-line" aria-hidden="true"></i>
+                <span>گزارش‌ها</span>
+            </a>
+
+            <a href="settings.html" class="nav-link">
+                <i class="fa-solid fa-gear" aria-hidden="true"></i>
+                <span>تنظیمات</span>
+            </a>
+        </nav>
+
+        <!-- Upgrade Box -->
+        <div class="sidebar-upgrade-card absolute bottom-[10px] left-4 right-4">
+            <div class="sidebar-upgrade-icon">
+                <i class="fa-solid fa-crown" aria-hidden="true"></i>
+            </div>
+
+            <h3 class="sidebar-upgrade-title">پلن حرفه‌ای</h3>
+
+            <p class="sidebar-upgrade-text">
+                عملکرد مالی شما نسبت به ماه قبل ۲۴٪ رشد داشته است.
+            </p>
+
+            <a href="reports.html" class="sidebar-upgrade-button block text-center">
+                مشاهده گزارش
+            </a>
+        </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="min-h-screen lg:mr-72">
+
+        <!-- Header -->
+        <header class="app-header sticky top-0 z-30 px-4 py-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between gap-4">
+
+                <div class="flex items-center gap-3">
+                    <button id="openSidebar" type="button" class="header-icon-button lg:hidden"
+                        aria-label="باز کردن منوی کناری" title="باز کردن منوی کناری">
+                        <i class="fa-solid fa-bars" aria-hidden="true"></i>
+                    </button>
+
+                    <div>
+                        <h2 class="page-title">مدیریت کاربران و مشتریان</h2>
+                        <p class="page-subtitle">
+                            فهرست حساب‌های کاربری، باشگاه مشتریان VIP، موجودی کیف‌پول و سطح وفاداری مالی
+                        </p>
+                    </div>
+                </div>
+
+                <div class="flex flex-1 items-center justify-end gap-3">
+
+                    <!-- Search Desktop -->
+                    <label for="usersDesktopSearch" class="search-box hidden md:flex">
+                        <span class="sr-only">جستجو در کاربران</span>
+                        <i class="fa-solid fa-magnifying-glass search-icon" aria-hidden="true"></i>
+                        <input id="usersDesktopSearch" type="search" placeholder="جستجو در نام، شماره تماس، ایمیل..." class="search-input" />
+                    </label>
+
+                    <!-- Theme Toggle -->
+                    <button type="button" class="theme-toggle" id="theme-toggle-btn" role="switch" aria-checked="false"
+                        aria-label="تغییر به حالت تاریک">
+                        <span class="theme-toggle__container">
+                            <span class="theme-toggle__clouds"></span>
+                            <span class="theme-toggle__stars">
+                                <svg xmlns="http://www.w3.org/2000/SVG2" viewBox="0 0 144 55" fill="none">
+                                    <path fill-rule="evenodd" clip-rule="evenodd"
+                                        d="M135.831 3.00688C135.055 3.85027 134.111 4.29946 133 4.35447C134.111 4.40947 135.055 4.85867 135.831 5.71123C136.607 6.55462 136.996 7.56303 136.996 8.72727C136.996 7.95722 137.172 7.25134 137.525 6.59129C137.886 5.93124 138.372 5.39954 138.98 5.00535C139.598 4.60199 140.268 4.39114 141 4.35447C139.88 4.2903 138.936 3.85027 138.16 3.00688C137.384 2.16348 136.996 1.16425 136.996 0C136.996 1.16425 136.607 2.16348 135.831 3.00688ZM31 23.3545C32.1114 23.2995 33.0551 22.8503 33.8313 22.0069C34.6075 21.1635 34.9956 20.1642 34.9956 19C34.9956 20.1642 35.3837 21.1635 36.1599 22.0069C36.9361 22.8503 37.8798 23.2903 39 23.3545C38.2679 23.3911 37.5976 23.602 36.9802 24.0053C36.3716 24.3995 35.8864 24.9312 35.5248 25.5913C35.172 26.2513 34.9956 26.9572 34.9956 27.7273C34.9956 26.563 34.6075 25.5546 33.8313 24.7112C33.0551 23.8587 32.1114 23.4095 31 23.3545ZM0 36.3545C1.11136 36.2995 2.05513 35.8503 2.83131 35.0069C3.6075 34.1635 3.99559 33.1642 3.99559 32C3.99559 33.1642 4.38368 34.1635 5.15987 35.0069C5.93605 35.8503 6.87982 36.2903 8 36.3545C7.26792 36.3911 6.59757 36.602 5.98015 37.0053C5.37155 37.3995 4.88644 37.9312 4.52481 38.5913C4.172 39.2513 3.99559 39.9572 3.99559 40.7273C3.99559 39.563 3.6075 38.5546 2.83131 37.7112C2.05513 36.8587 1.11136 36.4095 0 36.3545ZM56.8313 24.0069C56.0551 24.8503 55.1114 25.2995 54 25.3545C55.1114 25.4095 56.0551 25.8587 56.8313 26.7112C57.6075 27.5546 57.9956 28.563 57.9956 29.7273C57.9956 28.9572 58.172 28.2513 58.5248 27.5913C58.8864 26.9312 59.3716 26.3995 59.9802 26.0053C60.5976 25.602 61.2679 25.3911 62 25.3545C60.8798 25.2903 59.9361 24.8503 59.1599 24.0069C58.3837 23.1635 57.9956 22.1642 57.9956 21C57.9956 22.1642 57.6075 23.1635 56.8313 24.0069ZM81 25.3545C82.1114 25.2995 83.0551 24.8503 83.8313 24.0069C84.6075 23.1635 84.9956 22.1642 84.9956 21C84.9956 22.1642 85.3837 23.1635 86.1599 24.0069C86.9361 24.8503 87.8798 25.2903 89 25.3545C88.2679 25.3911 87.5976 25.602 86.9802 26.0053C86.3716 26.3995 85.8864 26.9312 85.5248 27.5913C85.172 28.2513 84.9956 28.9572 84.9956 29.7273C84.9956 28.563 84.6075 27.5546 83.8313 26.7112C83.0551 25.8587 82.1114 25.4095 81 25.3545ZM136 36.3545C137.111 36.2995 138.055 35.8503 138.831 35.0069C139.607 34.1635 139.996 33.1642 139.996 32C139.996 33.1642 140.384 34.1635 141.16 35.0069C141.936 35.8503 142.88 36.2903 144 36.3545C143.268 36.3911 142.598 36.602 141.98 37.0053C141.372 37.3995 140.886 37.9312 140.525 38.5913C140.172 39.2513 139.996 39.9572 139.996 40.7273C139.996 39.563 139.607 38.5546 138.831 37.7112C138.055 36.8587 137.111 36.4095 136 36.3545ZM101.831 49.0069C101.055 49.8503 100.111 50.2995 99 50.3545C100.111 50.4095 101.055 50.8587 101.831 51.7112C102.607 52.5546 102.996 53.563 102.996 54.7273C102.996 53.9572 103.172 53.2513 103.525 52.5913C103.886 51.9312 104.372 51.3995 104.98 51.0053C105.598 50.602 106.268 50.3911 107 50.3545C105.88 50.2903 104.936 49.8503 104.16 49.0069C103.384 48.1635 102.996 47.1642 102.996 46C102.996 47.1642 102.607 48.1635 101.831 49.0069Z"
+                                        fill="currentColor"></path>
+                                </svg>
+                            </span>
+                            <span class="theme-toggle__sun">
+                                <span class="theme-toggle__moon-mask">
+                                    <span class="theme-toggle__crater"></span>
+                                    <span class="theme-toggle__crater"></span>
+                                    <span class="theme-toggle__crater"></span>
+                                </span>
+                            </span>
+                        </span>
+                    </button>
+
+                    <!-- Profile -->
+                    <button type="button" class="profile-button" aria-label="مشاهده پروفایل مدیر سیستم"
+                        title="پروفایل مدیر سیستم">
+                        <div class="hidden text-right sm:block">
+                            <p class="profile-name">مدیر سیستم</p>
+                            <p class="profile-email">admin@financial.ir</p>
+                        </div>
+
+                        <div class="profile-avatar">
+                            <i class="fa-solid fa-user-tie" aria-hidden="true"></i>
+                        </div>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Search Mobile -->
+            <label for="usersMobileSearch" class="search-box mt-4 flex md:hidden">
+                <span class="sr-only">جستجو در کاربران</span>
+                <i class="fa-solid fa-magnifying-glass search-icon" aria-hidden="true"></i>
+                <input id="usersMobileSearch" type="search" placeholder="جستجو در کاربران..." class="search-input" />
+            </label>
+        </header>
+
+        <!-- Page Body -->
+        <section class="space-y-6 px-4 py-6 sm:px-6 lg:px-8">
+
+            <!-- Top Actions & Header -->
+            <div class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+                <div>
+                    <h3 class="panel-title text-xl">باشگاه مشتریان و کاربران</h3>
+                    <p class="panel-subtitle">مدیریت سطوح اعتباری، موجودی حساب‌ها و پیگیری ارزش مالی هر مشتری (LTV)</p>
+                </div>
+
+                <div class="flex flex-wrap items-center gap-2">
+                    <button type="button" class="secondary-button" onclick="window.showToast('خروجی اطلاعات کاربران دریافت شد', 'success')">
+                        <i class="fa-solid fa-download text-blue-500" aria-hidden="true"></i>
+                        <span>خروجی گزارش</span>
+                    </button>
+
+                    <button type="button" class="primary-button" data-modal-open="newUserModal">
+                        <i class="fa-solid fa-user-plus" aria-hidden="true"></i>
+                        <span>افزودن کاربر جدید</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Stat Cards -->
+            <div class="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
+
+                <article class="stat-card">
+                    <div class="stat-icon stat-icon-violet">
+                        <i class="fa-solid fa-users" aria-hidden="true"></i>
+                    </div>
+                    <div>
+                        <p class="stat-label">کل مشتریان سیستم</p>
+                        <h3 class="stat-value">۹,۴۵۰</h3>
+                        <p class="stat-growth stat-growth-violet">
+                            <i class="fa-solid fa-arrow-trend-up" aria-hidden="true"></i>
+                            ۱۲.۴٪ رشد سالانه
+                        </p>
+                    </div>
+                </article>
+
+                <article class="stat-card">
+                    <div class="stat-icon stat-icon-emerald">
+                        <i class="fa-solid fa-crown" aria-hidden="true"></i>
+                    </div>
+                    <div>
+                        <p class="stat-label">مشتریان ویژه (VIP)</p>
+                        <h3 class="stat-value">۵۲۰</h3>
+                        <p class="stat-growth stat-growth-emerald">
+                            <i class="fa-solid fa-gem" aria-hidden="true"></i>
+                            ۵۸٪ از کل فروش
+                        </p>
+                    </div>
+                </article>
+
+                <article class="stat-card">
+                    <div class="stat-icon stat-icon-blue">
+                        <i class="fa-solid fa-user-check" aria-hidden="true"></i>
+                    </div>
+                    <div>
+                        <p class="stat-label">کاربران جدید این ماه</p>
+                        <h3 class="stat-value">+۴۸۵</h3>
+                        <p class="stat-growth stat-growth-blue">
+                            <i class="fa-solid fa-arrow-trend-up" aria-hidden="true"></i>
+                            ۱۸٪ جذب از کمپین
+                        </p>
+                    </div>
+                </article>
+
+                <article class="stat-card">
+                    <div class="stat-icon stat-icon-orange">
+                        <i class="fa-solid fa-wallet" aria-hidden="true"></i>
+                    </div>
+                    <div>
+                        <p class="stat-label">میانگین ارزش خرید (LTV)</p>
+                        <h3 class="stat-value">۳.۶۵M</h3>
+                        <p class="stat-growth stat-growth-orange">
+                            <i class="fa-solid fa-chart-line" aria-hidden="true"></i>
+                            تومان به ازای هر کاربر
+                        </p>
+                    </div>
+                </article>
+
+            </div>
+
+            <!-- Users Management Table Panel -->
+            <section class="panel">
+
+                <!-- Filter Segments Header -->
+                <div class="mb-6 flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
+                    <div class="flex flex-wrap gap-2">
+                        <button type="button" class="filter-button active">همه کاربران (۹,۴۵۰)</button>
+                        <button type="button" class="filter-button">مشتریان طلایی VIP (۵۲۰)</button>
+                        <button type="button" class="filter-button">مشتریان نقره‌ای (۱,۳۴۰)</button>
+                        <button type="button" class="filter-button">عادی (۷,۴۱۰)</button>
+                        <button type="button" class="filter-button">مسدود شده (۱۸۰)</button>
+                    </div>
+
+                    <div class="flex items-center gap-2">
+                        <label for="usersSortFilter" class="sr-only">مرتب‌سازی کاربران</label>
+                        <select id="usersSortFilter" class="form-select py-1.5 px-3 text-xs w-auto cursor-pointer" aria-label="مرتب‌سازی کاربران">
+                            <option value="highest_spend">بیشترین حجم تراکنش</option>
+                            <option value="newest">جدیدترین عضویت</option>
+                            <option value="highest_wallet">بیشترین موجودی کیف پول</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Table -->
+                <div class="overflow-x-auto">
+                    <table class="dashboard-table w-full min-w-220 text-right">
+                        <thead>
+                            <tr>
+                                <th>نام مشتری</th>
+                                <th>شماره تماس / ایمیل</th>
+                                <th>سطح عضویت</th>
+                                <th>تعداد سفارش</th>
+                                <th>کل خرید (تومان)</th>
+                                <th>موجودی کیف‌پول</th>
+                                <th>وضعیت</th>
+                                <th class="text-center">عملیات</th>
+                            </tr>
+                        </thead>
+
+                        <tbody>
+                            <!-- User 1 -->
+                            <tr>
+                                <td>
+                                    <div class="flex items-center gap-2.5">
+                                        <div class="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-tr from-amber-500 to-amber-300 font-black text-white shadow-sm">
+                                            ع‌ر
+                                        </div>
+                                        <div>
+                                            <div class="flex items-center gap-1.5">
+                                                <p class="font-bold">علی رضایی</p>
+                                                <i class="fa-solid fa-circle-check text-xs text-blue-500" title="احراز هویت شده"></i>
+                                            </div>
+                                            <p class="text-xs text-slate-400">شناسه: #USR-9021</p>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td>
+                                    <p class="font-semibold text-xs">۰۹۱۲۳۴۵۶۷۸۹</p>
+                                    <p class="text-xs text-slate-400 font-mono">ali.rezaei@gmail.com</p>
+                                </td>
+                                <td>
+                                    <span class="inline-flex items-center gap-1.5 rounded-full bg-amber-500/10 px-2.5 py-1 text-xs font-black text-amber-600 dark:text-amber-400">
+                                        <i class="fa-solid fa-crown text-[10px]" aria-hidden="true"></i>
+                                        طلایی (VIP)
+                                    </span>
+                                </td>
+                                <td class="font-bold">۲۴ سفارش</td>
+                                <td class="font-black text-emerald-600 dark:text-emerald-400">۱۴۸,۲۰۰,۰۰۰</td>
+                                <td class="font-bold text-slate-700 dark:text-slate-200">۴,۲۰۰,۰۰۰</td>
+                                <td>
+                                    <span class="badge success">فعال</span>
+                                </td>
+                                <td>
+                                    <div class="flex items-center justify-center gap-1.5">
+                                        <button type="button" class="action-button" title="مشاهده پرونده مالی" data-modal-open="userProfileModal"
+                                            aria-label="مشاهده پرونده علی رضایی">
+                                            <i class="fa-solid fa-id-card text-emerald-500" aria-hidden="true"></i>
+                                        </button>
+                                        <button type="button" class="action-button" title="ارسال پیامک" onclick="window.showToast('پیامک اطلاع‌رسانی ارسال شد', 'success')"
+                                            aria-label="ارسال پیامک">
+                                            <i class="fa-solid fa-comment-sms text-blue-500" aria-hidden="true"></i>
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+
+                            <!-- User 2 -->
+                            <tr>
+                                <td>
+                                    <div class="flex items-center gap-2.5">
+                                        <div class="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-tr from-slate-400 to-slate-200 font-black text-slate-800 shadow-sm">
+                                            س‌م
+                                        </div>
+                                        <div>
+                                            <div class="flex items-center gap-1.5">
+                                                <p class="font-bold">سارا محمدی</p>
+                                                <i class="fa-solid fa-circle-check text-xs text-blue-500" title="احراز هویت شده"></i>
+                                            </div>
+                                            <p class="text-xs text-slate-400">شناسه: #USR-9022</p>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td>
+                                    <p class="font-semibold text-xs">۰۹۳۵۱۲۳۴۵۶۷</p>
+                                    <p class="text-xs text-slate-400 font-mono">sara.mohammadi@yahoo.com</p>
+                                </td>
+                                <td>
+                                    <span class="inline-flex items-center gap-1.5 rounded-full bg-slate-500/10 px-2.5 py-1 text-xs font-black text-slate-600 dark:text-slate-300">
+                                        <i class="fa-solid fa-medal text-[10px]" aria-hidden="true"></i>
+                                        نقره‌ای
+                                    </span>
+                                </td>
+                                <td class="font-bold">۱۵ سفارش</td>
+                                <td class="font-black text-emerald-600 dark:text-emerald-400">۶۲,۴۰۰,۰۰۰</td>
+                                <td class="font-bold text-slate-700 dark:text-slate-200">۱,۱۵۰,۰۰۰</td>
+                                <td>
+                                    <span class="badge success">فعال</span>
+                                </td>
+                                <td>
+                                    <div class="flex items-center justify-center gap-1.5">
+                                        <button type="button" class="action-button" title="مشاهده پرونده مالی" data-modal-open="userProfileModal"
+                                            aria-label="مشاهده پرونده">
+                                            <i class="fa-solid fa-id-card text-emerald-500" aria-hidden="true"></i>
+                                        </button>
+                                        <button type="button" class="action-button" title="ارسال پیامک" onclick="window.showToast('پیامک اطلاع‌رسانی ارسال شد', 'success')"
+                                            aria-label="ارسال پیامک">
+                                            <i class="fa-solid fa-comment-sms text-blue-500" aria-hidden="true"></i>
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+
+                            <!-- User 3 -->
+                            <tr>
+                                <td>
+                                    <div class="flex items-center gap-2.5">
+                                        <div class="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-tr from-amber-500 to-amber-300 font-black text-white shadow-sm">
+                                            م‌ک
+                                        </div>
+                                        <div>
+                                            <div class="flex items-center gap-1.5">
+                                                <p class="font-bold">محمد کریمی (شرکت نگار)</p>
+                                                <i class="fa-solid fa-circle-check text-xs text-blue-500" title="احراز هویت حقوقی"></i>
+                                            </div>
+                                            <p class="text-xs text-slate-400">شناسه: #USR-9023</p>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td>
+                                    <p class="font-semibold text-xs">۰۹۱۸۹۸۷۶۵۴۳</p>
+                                    <p class="text-xs text-slate-400 font-mono">info@negar-co.ir</p>
+                                </td>
+                                <td>
+                                    <span class="inline-flex items-center gap-1.5 rounded-full bg-amber-500/10 px-2.5 py-1 text-xs font-black text-amber-600 dark:text-amber-400">
+                                        <i class="fa-solid fa-crown text-[10px]" aria-hidden="true"></i>
+                                        طلایی (VIP)
+                                    </span>
+                                </td>
+                                <td class="font-bold">۳۸ سفارش</td>
+                                <td class="font-black text-emerald-600 dark:text-emerald-400">۳۱۰,۰۰۰,۰۰۰</td>
+                                <td class="font-bold text-slate-700 dark:text-slate-200">۱۲,۸۰۰,۰۰۰</td>
+                                <td>
+                                    <span class="badge success">فعال</span>
+                                </td>
+                                <td>
+                                    <div class="flex items-center justify-center gap-1.5">
+                                        <button type="button" class="action-button" title="مشاهده پرونده مالی" data-modal-open="userProfileModal"
+                                            aria-label="مشاهده پرونده">
+                                            <i class="fa-solid fa-id-card text-emerald-500" aria-hidden="true"></i>
+                                        </button>
+                                        <button type="button" class="action-button" title="ارسال پیامک" onclick="window.showToast('پیامک اطلاع‌رسانی ارسال شد', 'success')"
+                                            aria-label="ارسال پیامک">
+                                            <i class="fa-solid fa-comment-sms text-blue-500" aria-hidden="true"></i>
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+
+                            <!-- User 4 -->
+                            <tr>
+                                <td>
+                                    <div class="flex items-center gap-2.5">
+                                        <div class="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-tr from-emerald-500 to-teal-400 font-black text-white shadow-sm">
+                                            ن‌ف
+                                        </div>
+                                        <div>
+                                            <div class="flex items-center gap-1.5">
+                                                <p class="font-bold">نرگس فرهادی</p>
+                                            </div>
+                                            <p class="text-xs text-slate-400">شناسه: #USR-9024</p>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td>
+                                    <p class="font-semibold text-xs">۰۹۱۲۱۱۱۲۲۳۳</p>
+                                    <p class="text-xs text-slate-400 font-mono">narges.farhadi@gmail.com</p>
+                                </td>
+                                <td>
+                                    <span class="inline-flex items-center gap-1.5 rounded-full bg-slate-100 px-2.5 py-1 text-xs font-semibold text-slate-600 dark:bg-slate-800 dark:text-slate-300">
+                                        عادی
+                                    </span>
+                                </td>
+                                <td class="font-bold">۴ سفارش</td>
+                                <td class="font-black text-emerald-600 dark:text-emerald-400">۱۸,۵۰۰,۰۰۰</td>
+                                <td class="font-bold text-slate-700 dark:text-slate-200">۰</td>
+                                <td>
+                                    <span class="badge info">احراز اولیه</span>
+                                </td>
+                                <td>
+                                    <div class="flex items-center justify-center gap-1.5">
+                                        <button type="button" class="action-button" title="مشاهده پرونده مالی" data-modal-open="userProfileModal"
+                                            aria-label="مشاهده پرونده">
+                                            <i class="fa-solid fa-id-card text-emerald-500" aria-hidden="true"></i>
+                                        </button>
+                                        <button type="button" class="action-button" title="ارسال پیامک" onclick="window.showToast('پیامک اطلاع‌رسانی ارسال شد', 'success')"
+                                            aria-label="ارسال پیامک">
+                                            <i class="fa-solid fa-comment-sms text-blue-500" aria-hidden="true"></i>
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+
+                            <!-- User 5 -->
+                            <tr>
+                                <td>
+                                    <div class="flex items-center gap-2.5">
+                                        <div class="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-tr from-rose-500 to-rose-300 font-black text-white shadow-sm">
+                                            ح‌ن
+                                        </div>
+                                        <div>
+                                            <div class="flex items-center gap-1.5">
+                                                <p class="font-bold">حسین ناصری</p>
+                                            </div>
+                                            <p class="text-xs text-slate-400">شناسه: #USR-9025</p>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td>
+                                    <p class="font-semibold text-xs">۰۹۳۳۵۵۵۶۶۷۷</p>
+                                    <p class="text-xs text-slate-400 font-mono">h.naseri@gmail.com</p>
+                                </td>
+                                <td>
+                                    <span class="inline-flex items-center gap-1.5 rounded-full bg-slate-100 px-2.5 py-1 text-xs font-semibold text-slate-600 dark:bg-slate-800 dark:text-slate-300">
+                                        عادی
+                                    </span>
+                                </td>
+                                <td class="font-bold">۱ سفارش</td>
+                                <td class="font-black text-emerald-600 dark:text-emerald-400">۱,۹۵۰,۰۰۰</td>
+                                <td class="font-bold text-slate-700 dark:text-slate-200">۰</td>
+                                <td>
+                                    <span class="badge danger">مسدود شده</span>
+                                </td>
+                                <td>
+                                    <div class="flex items-center justify-center gap-1.5">
+                                        <button type="button" class="action-button" title="مشاهده پرونده مالی" data-modal-open="userProfileModal"
+                                            aria-label="مشاهده پرونده">
+                                            <i class="fa-solid fa-id-card text-emerald-500" aria-hidden="true"></i>
+                                        </button>
+                                        <button type="button" class="action-button" title="ارسال پیامک" onclick="window.showToast('کاربر مسدود است', 'danger')"
+                                            aria-label="ارسال پیامک">
+                                            <i class="fa-solid fa-ban text-rose-500" aria-hidden="true"></i>
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- Pagination -->
+                <div class="pagination-container">
+                    <p>نمایش ردیف ۱ تا ۵ از ۹,۴۵۰ حساب کاربری</p>
+
+                    <div class="flex items-center gap-1.5">
+                        <button type="button" class="pagination-btn" disabled aria-label="صفحه قبلی">
+                            <i class="fa-solid fa-angle-right" aria-hidden="true"></i>
+                        </button>
+                        <button type="button" class="pagination-btn active">۱</button>
+                        <button type="button" class="pagination-btn">۲</button>
+                        <button type="button" class="pagination-btn">۳</button>
+                        <span class="px-1 text-slate-400">...</span>
+                        <button type="button" class="pagination-btn">۹۴۵</button>
+                        <button type="button" class="pagination-btn" aria-label="صفحه بعدی">
+                            <i class="fa-solid fa-angle-left" aria-hidden="true"></i>
+                        </button>
+                    </div>
+                </div>
+
+            </section>
+
+        </section>
+    </main>
+
+    <!-- Modal: New User -->
+    <dialog id="newUserModal" class="modal-overlay" aria-labelledby="newUserTitle">
+        <div class="modal-content">
+            <div class="flex items-center justify-between border-b border-slate-200 pb-4 dark:border-slate-800">
+                <div class="flex items-center gap-2.5">
+                    <div class="flex h-10 w-10 items-center justify-center rounded-xl bg-violet-500/10 text-violet-600 dark:text-violet-400">
+                        <i class="fa-solid fa-user-plus text-lg" aria-hidden="true"></i>
+                    </div>
+                    <div>
+                        <h3 id="newUserTitle" class="text-base font-black">تعریف کاربر / مشتری جدید</h3>
+                        <p class="text-xs text-slate-400">ثبت پرونده مالی و افتتاح حساب کاربری</p>
+                    </div>
+                </div>
+
+                <button type="button" class="sidebar-icon-button" data-modal-close aria-label="بستن پنجره">
+                    <i class="fa-solid fa-xmark" aria-hidden="true"></i>
+                </button>
+            </div>
+
+            <form onsubmit="event.preventDefault(); window.showToast('کاربر جدید با موفقیت ایجاد شد', 'success'); document.getElementById('newUserModal').classList.remove('open'); document.body.style.overflow='';" class="space-y-4 py-4">
+                <div class="grid grid-cols-1 gap-3 sm:grid-cols-2">
+                    <div class="form-group">
+                        <label class="form-label" for="userName">نام و نام خانوادگی</label>
+                        <input id="userName" type="text" placeholder="مثال: مریم کریمی" class="form-input" required />
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label" for="userPhone">شماره موبایل</label>
+                        <input id="userPhone" type="tel" placeholder="۰۹۱۲..." class="form-input" required />
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 gap-3 sm:grid-cols-2">
+                    <div class="form-group">
+                        <label class="form-label" for="userEmail">پست الکترونیکی</label>
+                        <input id="userEmail" type="email" placeholder="example@domain.com" class="form-input" />
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label" for="userTier">سطح عضویت</label>
+                        <select id="userTier" class="form-select">
+                            <option value="normal">عادی</option>
+                            <option value="silver">نقره‌ای</option>
+                            <option value="gold">طلایی (VIP)</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" for="initialWallet">شارژ اولیه کیف پول (تومان)</label>
+                    <input id="initialWallet" type="number" placeholder="۰" class="form-input" />
+                    <span class="form-hint">مبلغ به عنوان بستانکاری به حساب کیف پول مشتری واریز می‌شود.</span>
+                </div>
+
+                <div class="flex items-center justify-end gap-2 border-t border-slate-200 pt-4 dark:border-slate-800">
+                    <button type="button" class="secondary-button" data-modal-close>انصراف</button>
+                    <button type="submit" class="primary-button">
+                        <i class="fa-solid fa-check" aria-hidden="true"></i>
+                        <span>ایجاد حساب کاربری</span>
+                    </button>
+                </div>
+            </form>
+        </div>
+    </dialog>
+
+    <!-- Modal: User Profile & Financial Summary -->
+    <dialog id="userProfileModal" class="modal-overlay" aria-labelledby="profileTitle">
+        <div class="modal-content !max-w-xl">
+            <div class="flex items-center justify-between border-b border-slate-200 pb-4 dark:border-slate-800">
+                <div class="flex items-center gap-3">
+                    <div class="flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-tr from-amber-500 to-amber-300 font-black text-white shadow-md text-lg">
+                        ع‌ر
+                    </div>
+                    <div>
+                        <h3 id="profileTitle" class="text-base font-black">پرونده مالی علی رضایی</h3>
+                        <p class="text-xs text-slate-400">عضو باشگاه طلایی VIP • تاریخ ثبت‌نام: ۱۴۰۲/۰۴/۱۰</p>
+                    </div>
+                </div>
+
+                <button type="button" class="sidebar-icon-button" data-modal-close aria-label="بستن پنجره">
+                    <i class="fa-solid fa-xmark" aria-hidden="true"></i>
+                </button>
+            </div>
+
+            <div class="space-y-4 py-4 text-xs">
+                <!-- Financial Summary Cards -->
+                <div class="grid grid-cols-2 gap-3 sm:grid-cols-3">
+                    <div class="rounded-xl border border-slate-200 p-3 text-center dark:border-slate-800">
+                        <span class="text-slate-400">کل خریدها:</span>
+                        <p class="mt-1 text-sm font-black text-emerald-600 dark:text-emerald-400">۱۴۸M تومان</p>
+                    </div>
+                    <div class="rounded-xl border border-slate-200 p-3 text-center dark:border-slate-800">
+                        <span class="text-slate-400">موجودی کیف پول:</span>
+                        <p class="mt-1 text-sm font-black text-blue-600 dark:text-blue-400">۴,۲۰۰,۰۰۰ تومان</p>
+                    </div>
+                    <div class="col-span-2 sm:col-span-1 rounded-xl border border-slate-200 p-3 text-center dark:border-slate-800">
+                        <span class="text-slate-400">امتیاز وفاداری:</span>
+                        <p class="mt-1 text-sm font-black text-amber-600 dark:text-amber-400">۲,۸۴۰ امتیاز</p>
+                    </div>
+                </div>
+
+                <!-- Banking & Verification Details -->
+                <div class="space-y-2 rounded-2xl bg-slate-50 p-3.5 dark:bg-slate-900/60">
+                    <div class="flex justify-between border-b border-slate-200 pb-1.5 dark:border-slate-800">
+                        <span class="text-slate-400">شماره شبا ثبت‌شده:</span>
+                        <span class="font-mono font-bold text-slate-800 dark:text-slate-100">IR12 0170 0000 0012 3456 7890 01</span>
+                    </div>
+                    <div class="flex justify-between border-b border-slate-200 pb-1.5 dark:border-slate-800">
+                        <span class="text-slate-400">بانک عامل:</span>
+                        <span class="font-bold text-slate-800 dark:text-slate-100">بانک ملی ایران (شعبه مرکزی)</span>
+                    </div>
+                    <div class="flex justify-between">
+                        <span class="text-slate-400">وضعیت مالیاتی:</span>
+                        <span class="font-bold text-emerald-600 dark:text-emerald-400">تطبیق موفق با سامانه مودیان</span>
+                    </div>
+                </div>
+
+                <!-- Last 3 Transactions -->
+                <div>
+                    <h4 class="mb-2 font-bold text-slate-700 dark:text-slate-200">۳ تراکنش اخیر این مشتری:</h4>
+                    <div class="space-y-2">
+                        <div class="flex items-center justify-between rounded-xl border border-slate-200 p-2.5 dark:border-slate-800">
+                            <div>
+                                <p class="font-bold">خرید اشتراک سالانه ابری</p>
+                                <span class="text-slate-400 text-[10px]">۱۴۰۳/۰۸/۲۴ - درگاه زرین‌پال</span>
+                            </div>
+                            <span class="font-black text-emerald-600 dark:text-emerald-400">+۱۴,۸۵۰,۰۰۰ تومان</span>
+                        </div>
+                        <div class="flex items-center justify-between rounded-xl border border-slate-200 p-2.5 dark:border-slate-800">
+                            <div>
+                                <p class="font-bold">شارژ اعتباری کیف‌پول</p>
+                                <span class="text-slate-400 text-[10px]">۱۴۰۳/۰۸/۱۸ - کارت به کارت</span>
+                            </div>
+                            <span class="font-black text-emerald-600 dark:text-emerald-400">+۵,۰۰۰,۰۰۰ تومان</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="flex items-center justify-end gap-2 border-t border-slate-200 pt-4 dark:border-slate-800">
+                <button type="button" class="secondary-button" data-modal-close>بستن</button>
+                <a href="transactions.html" class="primary-button">
+                    <i class="fa-solid fa-receipt" aria-hidden="true"></i>
+                    <span>مشاهده تمام تراکنش‌های کاربر</span>
+                </a>
+            </div>
+        </div>
+    </dialog>
+
+    <!-- Scripts -->
+    <script src="../assets/js/dashboard.js"></script>
+    <script src="../assets/icons/toggle.js"></script>
+</body>
+
+</html>

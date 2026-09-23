@@ -1,0 +1,53 @@
+# ==========================================
+# Netlify Build and Deployment Settings
+# ==========================================
+[build]
+  # Directory where static files are located
+  publish = "."
+
+  # Build command to compile Tailwind styles on Netlify build servers
+  command = "npm run build:css"
+
+# ==========================================
+# Edge-Level Redirects
+# Redirect root path directly to the dashboard page
+# ==========================================
+[[redirects]]
+  from = "/"
+  to = "/pages/dashboard.html"
+  status = 302
+  force = true
+
+# ==========================================
+# Modern Security Headers for all routes
+# ==========================================
+[[headers]]
+  for = "/*"
+  [headers.values]
+    # Prevent framing to protect against Clickjacking
+    X-Frame-Options = "DENY"
+    
+    # Prevent MIME-type sniffing
+    X-Content-Type-Options = "nosniff"
+    
+    # Control referrer information sent in requests
+    Referrer-Policy = "strict-origin-when-cross-origin"
+    
+    # Disable sensitive browser feature permissions
+    Permissions-Policy = "camera=(), microphone=(), geolocation=()"
+
+# ==========================================
+# Browser Caching Optimization
+# ==========================================
+# Long-term immutable caching for static assets
+[[headers]]
+  for = "/assets/*"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
+
+# Ensure clients always revalidate and fetch latest HTML pages
+[[headers]]
+  for = "/*.html"
+  [headers.values]
+    Cache-Control = "public, max-age=0, must-revalidate"
+

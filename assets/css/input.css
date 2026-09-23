@@ -1,0 +1,32 @@
+@import "tailwindcss";
+
+@theme {
+    --font-sans: "Sahel", "Tahoma", "Arial", sans-serif;
+}
+
+@custom-variant dark (&:where(.dark, .dark *));
+ 
+@utility no-scrollbar {
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+    &::-webkit-scrollbar {
+        display: none;
+    }
+}
+
+@layer base {
+    button,
+    [type="button"],
+    [type="reset"],
+    [type="submit"],
+    [role="button"] {
+        cursor: pointer;
+    }
+    button:disabled,
+    [type="button"]:disabled,
+    [type="reset"]:disabled,
+    [type="submit"]:disabled,
+    [disabled] {
+        cursor: not-allowed;
+    }
+}

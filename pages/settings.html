@@ -1,0 +1,566 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <title>تنظیمات سیستم | پنل مدیریت مالی</title>
+
+    <meta name="description" content="تنظیمات درگاه‌های پرداخت، قوانین مالیاتی، امنیت و پیکربندی حساب در پنل مدیریت مالی" />
+
+    <!-- Prevent dark mode flash -->
+    <script>
+        if (
+            localStorage.theme === "dark" ||
+            (!("theme" in localStorage) &&
+                window.matchMedia("(prefers-color-scheme: dark)").matches)
+        ) {
+            document.documentElement.classList.add("dark");
+        } else {
+            document.documentElement.classList.remove("dark");
+        }
+    </script>
+
+    <!-- Sahel Font CDN -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sahel-font@3.4.0/dist/font-face.min.css" integrity="sha384-QM6N0qOCGo9ad2o1Onud38zTA+6afi5l7I7ciDAgSzLhKOdg7xyHuJl+OZJgMpPg" crossorigin="anonymous" />
+
+    <!-- Font Awesome CDN -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@7.2.0/css/all.min.css" integrity="sha384-EXatlQyrOJgDaM9/a74ArMzy7/2bTMSrZj8ID1IPeVmc3GncfCugefCFWSLj8JL/" crossorigin="anonymous" />
+
+    <!-- Tailwind Output CSS -->
+    <link rel="stylesheet" href="../assets/css/output.css" />
+
+    <!-- Dashboard Custom CSS -->
+    <link rel="stylesheet" href="../assets/css/dashboard.css" />
+
+    <!-- Animated Theme Toggle -->
+    <link rel="stylesheet" href="../assets/icons/toggle.css" />
+</head>
+
+<body class="font-sans min-h-screen antialiased transition-colors">
+
+    <!-- Mobile Overlay -->
+    <div id="overlay" class="mobile-overlay hidden"></div>
+
+    <!-- Sidebar -->
+    <aside id="sidebar"
+        class="app-sidebar fixed right-0 top-0 z-50 h-screen w-72 translate-x-full px-4 py-5 transition-transform lg:translate-x-0">
+        <!-- Sidebar Header -->
+        <div class="mb-8 flex items-center justify-between">
+            <div class="flex items-center gap-3">
+                <div class="sidebar-logo">
+                    <i class="fa-solid fa-layer-group" aria-hidden="true"></i>
+                </div>
+
+                <div>
+                    <h1 class="sidebar-brand-title">پنل مدیریت مالی</h1>
+                    <p class="sidebar-brand-subtitle">سامانه یکپارچه مالی</p>
+                </div>
+            </div>
+
+            <button id="closeSidebar" type="button" class="sidebar-icon-button lg:hidden" aria-label="بستن منوی کناری"
+                title="بستن منوی کناری">
+                <i class="fa-solid fa-xmark" aria-hidden="true"></i>
+            </button>
+        </div>
+
+        <!-- Navigation -->
+        <nav class="flex flex-col gap-2 pb-56" aria-label="منوی اصلی">
+            <a href="dashboard.html" class="nav-link">
+                <i class="fa-solid fa-chart-pie" aria-hidden="true"></i>
+                <span>داشبورد</span>
+            </a>
+
+            <a href="orders.html" class="nav-link">
+                <i class="fa-solid fa-bag-shopping" aria-hidden="true"></i>
+                <span>سفارش‌ها</span>
+            </a>
+
+            <a href="users.html" class="nav-link">
+                <i class="fa-solid fa-users" aria-hidden="true"></i>
+                <span>کاربران</span>
+            </a>
+
+            <a href="transactions.html" class="nav-link">
+                <i class="fa-solid fa-credit-card" aria-hidden="true"></i>
+                <span>تراکنش‌ها</span>
+            </a>
+
+            <a href="reports.html" class="nav-link">
+                <i class="fa-solid fa-chart-line" aria-hidden="true"></i>
+                <span>گزارش‌ها</span>
+            </a>
+
+            <a href="settings.html" class="nav-link active" aria-current="page">
+                <i class="fa-solid fa-gear" aria-hidden="true"></i>
+                <span>تنظیمات</span>
+            </a>
+        </nav>
+
+        <!-- Upgrade Box -->
+        <div class="sidebar-upgrade-card absolute bottom-[10px] left-4 right-4">
+            <div class="sidebar-upgrade-icon">
+                <i class="fa-solid fa-crown" aria-hidden="true"></i>
+            </div>
+
+            <h3 class="sidebar-upgrade-title">پلن حرفه‌ای</h3>
+
+            <p class="sidebar-upgrade-text">
+                عملکرد مالی شما نسبت به ماه قبل ۲۴٪ رشد داشته است.
+            </p>
+
+            <a href="reports.html" class="sidebar-upgrade-button block text-center">
+                مشاهده گزارش
+            </a>
+        </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="min-h-screen lg:mr-72">
+
+        <!-- Header -->
+        <header class="app-header sticky top-0 z-30 px-4 py-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between gap-4">
+
+                <div class="flex items-center gap-3">
+                    <button id="openSidebar" type="button" class="header-icon-button lg:hidden"
+                        aria-label="باز کردن منوی کناری" title="باز کردن منوی کناری">
+                        <i class="fa-solid fa-bars" aria-hidden="true"></i>
+                    </button>
+
+                    <div>
+                        <h2 class="page-title">تنظیمات و پیکربندی مالی</h2>
+                        <p class="page-subtitle">
+                            پیکربندی درگاه‌های بانکی، مالیات ارزش افزوده، شماره شبا، اعلان‌های پیامکی و کلیدهای امنیتی
+                        </p>
+                    </div>
+                </div>
+
+                <div class="flex flex-1 items-center justify-end gap-3">
+
+                    <!-- Search Desktop -->
+                    <label for="settingsDesktopSearch" class="search-box hidden md:flex">
+                        <span class="sr-only">جستجو در تنظیمات</span>
+                        <i class="fa-solid fa-magnifying-glass search-icon" aria-hidden="true"></i>
+                        <input id="settingsDesktopSearch" type="search" placeholder="جستجو در گزینه‌های تنظیمات..." class="search-input" />
+                    </label>
+
+                    <!-- Theme Toggle -->
+                    <button type="button" class="theme-toggle" id="theme-toggle-btn" role="switch" aria-checked="false"
+                        aria-label="تغییر به حالت تاریک">
+                        <span class="theme-toggle__container">
+                            <span class="theme-toggle__clouds"></span>
+                            <span class="theme-toggle__stars">
+                                <svg xmlns="http://www.w3.org/2000/SVG2" viewBox="0 0 144 55" fill="none">
+                                    <path fill-rule="evenodd" clip-rule="evenodd"
+                                        d="M135.831 3.00688C135.055 3.85027 134.111 4.29946 133 4.35447C134.111 4.40947 135.055 4.85867 135.831 5.71123C136.607 6.55462 136.996 7.56303 136.996 8.72727C136.996 7.95722 137.172 7.25134 137.525 6.59129C137.886 5.93124 138.372 5.39954 138.98 5.00535C139.598 4.60199 140.268 4.39114 141 4.35447C139.88 4.2903 138.936 3.85027 138.16 3.00688C137.384 2.16348 136.996 1.16425 136.996 0C136.996 1.16425 136.607 2.16348 135.831 3.00688ZM31 23.3545C32.1114 23.2995 33.0551 22.8503 33.8313 22.0069C34.6075 21.1635 34.9956 20.1642 34.9956 19C34.9956 20.1642 35.3837 21.1635 36.1599 22.0069C36.9361 22.8503 37.8798 23.2903 39 23.3545C38.2679 23.3911 37.5976 23.602 36.9802 24.0053C36.3716 24.3995 35.8864 24.9312 35.5248 25.5913C35.172 26.2513 34.9956 26.9572 34.9956 27.7273C34.9956 26.563 34.6075 25.5546 33.8313 24.7112C33.0551 23.8587 32.1114 23.4095 31 23.3545ZM0 36.3545C1.11136 36.2995 2.05513 35.8503 2.83131 35.0069C3.6075 34.1635 3.99559 33.1642 3.99559 32C3.99559 33.1642 4.38368 34.1635 5.15987 35.0069C5.93605 35.8503 6.87982 36.2903 8 36.3545C7.26792 36.3911 6.59757 36.602 5.98015 37.0053C5.37155 37.3995 4.88644 37.9312 4.52481 38.5913C4.172 39.2513 3.99559 39.9572 3.99559 40.7273C3.99559 39.563 3.6075 38.5546 2.83131 37.7112C2.05513 36.8587 1.11136 36.4095 0 36.3545ZM56.8313 24.0069C56.0551 24.8503 55.1114 25.2995 54 25.3545C55.1114 25.4095 56.0551 25.8587 56.8313 26.7112C57.6075 27.5546 57.9956 28.563 57.9956 29.7273C57.9956 28.9572 58.172 28.2513 58.5248 27.5913C58.8864 26.9312 59.3716 26.3995 59.9802 26.0053C60.5976 25.602 61.2679 25.3911 62 25.3545C60.8798 25.2903 59.9361 24.8503 59.1599 24.0069C58.3837 23.1635 57.9956 22.1642 57.9956 21C57.9956 22.1642 57.6075 23.1635 56.8313 24.0069ZM81 25.3545C82.1114 25.2995 83.0551 24.8503 83.8313 24.0069C84.6075 23.1635 84.9956 22.1642 84.9956 21C84.9956 22.1642 85.3837 23.1635 86.1599 24.0069C86.9361 24.8503 87.8798 25.2903 89 25.3545C88.2679 25.3911 87.5976 25.602 86.9802 26.0053C86.3716 26.3995 85.8864 26.9312 85.5248 27.5913C85.172 28.2513 84.9956 28.9572 84.9956 29.7273C84.9956 28.563 84.6075 27.5546 83.8313 26.7112C83.0551 25.8587 82.1114 25.4095 81 25.3545ZM136 36.3545C137.111 36.2995 138.055 35.8503 138.831 35.0069C139.607 34.1635 139.996 33.1642 139.996 32C139.996 33.1642 140.384 34.1635 141.16 35.0069C141.936 35.8503 142.88 36.2903 144 36.3545C143.268 36.3911 142.598 36.602 141.98 37.0053C141.372 37.3995 140.886 37.9312 140.525 38.5913C140.172 39.2513 139.996 39.9572 139.996 40.7273C139.996 39.563 139.607 38.5546 138.831 37.7112C138.055 36.8587 137.111 36.4095 136 36.3545ZM101.831 49.0069C101.055 49.8503 100.111 50.2995 99 50.3545C100.111 50.4095 101.055 50.8587 101.831 51.7112C102.607 52.5546 102.996 53.563 102.996 54.7273C102.996 53.9572 103.172 53.2513 103.525 52.5913C103.886 51.9312 104.372 51.3995 104.98 51.0053C105.598 50.602 106.268 50.3911 107 50.3545C105.88 50.2903 104.936 49.8503 104.16 49.0069C103.384 48.1635 102.996 47.1642 102.996 46C102.996 47.1642 102.607 48.1635 101.831 49.0069Z"
+                                        fill="currentColor"></path>
+                                </svg>
+                            </span>
+                            <span class="theme-toggle__sun">
+                                <span class="theme-toggle__moon-mask">
+                                    <span class="theme-toggle__crater"></span>
+                                    <span class="theme-toggle__crater"></span>
+                                    <span class="theme-toggle__crater"></span>
+                                </span>
+                            </span>
+                        </span>
+                    </button>
+
+                    <!-- Profile -->
+                    <button type="button" class="profile-button" aria-label="مشاهده پروفایل مدیر سیستم"
+                        title="پروفایل مدیر سیستم">
+                        <div class="hidden text-right sm:block">
+                            <p class="profile-name">مدیر سیستم</p>
+                            <p class="profile-email">admin@financial.ir</p>
+                        </div>
+
+                        <div class="profile-avatar">
+                            <i class="fa-solid fa-user-tie" aria-hidden="true"></i>
+                        </div>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Search Mobile -->
+            <label for="settingsMobileSearch" class="search-box mt-4 flex md:hidden">
+                <span class="sr-only">جستجو در تنظیمات</span>
+                <i class="fa-solid fa-magnifying-glass search-icon" aria-hidden="true"></i>
+                <input id="settingsMobileSearch" type="search" placeholder="جستجو در تنظیمات..." class="search-input" />
+            </label>
+        </header>
+
+        <!-- Page Body -->
+        <section class="space-y-6 px-4 py-6 sm:px-6 lg:px-8" data-tab-container>
+
+            <!-- Top Actions -->
+            <div class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+                <div>
+                    <h3 class="panel-title text-xl">تنظیمات عمومی و درگاه‌ها</h3>
+                    <p class="panel-subtitle">پیکربندی هویت کسب‌وکار، اتصالات شاپرک، نرخ مالیاتی و لایه‌های امنیتی</p>
+                </div>
+
+                <div class="flex flex-wrap items-center gap-2">
+                    <button type="button" class="secondary-button" onclick="window.showToast('تنظیمات به حالت پیش‌فرض بازگشت', 'danger')">
+                        <i class="fa-solid fa-arrow-rotate-right" aria-hidden="true"></i>
+                        <span>بازگردانی پیش‌فرض</span>
+                    </button>
+
+                    <button type="button" class="primary-button" onclick="window.showToast('تنظیمات با موفقیت ذخیره گردید', 'success')">
+                        <i class="fa-solid fa-floppy-disk" aria-hidden="true"></i>
+                        <span>ذخیره تغییرات</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Tabs Navigation -->
+            <div class="tabs-header">
+                <button type="button" class="tab-btn active" data-tab-target="tab-company">
+                    <i class="fa-solid fa-building"></i>
+                    <span>اطلاعات شرکت و بانکی</span>
+                </button>
+
+                <button type="button" class="tab-btn" data-tab-target="tab-gateways">
+                    <i class="fa-solid fa-credit-card"></i>
+                    <span>پیکربندی درگاه‌های پرداخت</span>
+                </button>
+
+                <button type="button" class="tab-btn" data-tab-target="tab-tax">
+                    <i class="fa-solid fa-percent"></i>
+                    <span>مالیات و مودیان</span>
+                </button>
+
+                <button type="button" class="tab-btn" data-tab-target="tab-notifications">
+                    <i class="fa-solid fa-bell"></i>
+                    <span>اعلان‌ها و پیامک</span>
+                </button>
+
+                <button type="button" class="tab-btn" data-tab-target="tab-security">
+                    <i class="fa-solid fa-shield-halved"></i>
+                    <span>امنیت و نشست‌ها</span>
+                </button>
+            </div>
+
+            <!-- Tab 1: Company & Banking -->
+            <div id="tab-company" class="tab-content active space-y-6">
+                <section class="panel">
+                    <h4 class="font-black text-base mb-4">مشخصات حقوقی و حساب بانکی پیش‌فرض</h4>
+
+                    <form onsubmit="event.preventDefault(); window.showToast('اطلاعات شرکت به‌روزرسانی شد', 'success');" class="space-y-4">
+                        <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
+                            <div class="form-group">
+                                <label class="form-label" for="legalName">نام رسمی شرکت / فروشگاه</label>
+                                <input id="legalName" type="text" value="شرکت فناوران نوین پیشرو (سهامی خاص)" class="form-input" />
+                            </div>
+
+                            <div class="form-group">
+                                <label class="form-label" for="economicCode">کد اقتصادی / شناسه ملی</label>
+                                <input id="economicCode" type="text" value="14008765432" class="form-input font-mono" />
+                            </div>
+                        </div>
+
+                        <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
+                            <div class="form-group">
+                                <label class="form-label" for="defaultIban">شماره شبا حساب تسویه اصلی</label>
+                                <input id="defaultIban" type="text" value="IR940560000000102938475601" class="form-input font-mono text-left" dir="ltr" />
+                                <span class="form-hint">حساب متمرکز واریز مبالغ تسویه شاپرک</span>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="form-label" for="bankName">بانک عامل و نام صاحب حساب</label>
+                                <input id="bankName" type="text" value="بانک سامان - شعبه مرکزی تهران" class="form-input" />
+                            </div>
+                        </div>
+
+                        <div class="grid grid-cols-1 gap-4 sm:grid-cols-3">
+                            <div class="form-group">
+                                <label class="form-label" for="baseCurrency">ارز پایه محاسباتی سیستم</label>
+                                <select id="baseCurrency" class="form-select">
+                                    <option value="toman" selected>تومان (IRT)</option>
+                                    <option value="rial">ریال (IRR)</option>
+                                    <option value="usdt">تتر (USDT)</option>
+                                </select>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="form-label" for="supportPhone">شماره تماس پشتیبانی مالی</label>
+                                <input id="supportPhone" type="text" value="02188776655" class="form-input font-mono" />
+                            </div>
+
+                            <div class="form-group">
+                                <label class="form-label" for="fiscalYear">سال مالی جاری</label>
+                                <input id="fiscalYear" type="text" value="۱۴۰۳" class="form-input" />
+                            </div>
+                        </div>
+
+                        <div class="pt-4 border-t border-slate-200 dark:border-slate-800 flex justify-end">
+                            <button type="submit" class="primary-button">
+                                <i class="fa-solid fa-check"></i>
+                                <span>ذخیره مشخصات شرکت</span>
+                            </button>
+                        </div>
+                    </form>
+                </section>
+            </div>
+
+            <!-- Tab 2: Gateways Configuration -->
+            <div id="tab-gateways" class="tab-content space-y-6">
+                <!-- ZarinPal Gateway Settings -->
+                <section class="panel">
+                    <div class="flex items-center justify-between pb-4 border-b border-slate-200 dark:border-slate-800 mb-4">
+                        <div class="flex items-center gap-3">
+                            <div class="flex h-10 w-10 items-center justify-center rounded-xl bg-amber-500/10 text-amber-500 font-bold">
+                                <i class="fa-solid fa-credit-card text-lg"></i>
+                            </div>
+                            <div>
+                                <h4 class="font-black text-base">درگاه پرداخت زرین‌پال (ZarinPal)</h4>
+                                <p class="text-xs text-slate-400">تنظیمات مرچنت کد، کارمزد و تسویه فوری</p>
+                            </div>
+                        </div>
+
+                        <label for="zarinpalActiveToggle" class="custom-switch" title="فعال یا غیرفعال کردن درگاه زرین‌پال">
+                            <span class="sr-only">فعال‌سازی درگاه زرین‌پال</span>
+                            <input id="zarinpalActiveToggle" type="checkbox" checked aria-label="فعال‌سازی درگاه زرین‌پال" />
+                            <span class="slider-round" aria-hidden="true"></span>
+                        </label>
+                    </div>
+
+                    <div class="space-y-4">
+                        <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
+                            <div class="form-group">
+                                <label class="form-label" for="zarinMerchant">کد پذیرنده (Merchant ID)</label>
+                                <input id="zarinMerchant" type="text" value="7e58a980-1a2b-4c3d-9e8f-123456789abc" class="form-input font-mono text-xs" />
+                            </div>
+
+                            <div class="form-group">
+                                <label class="form-label" for="zarinMode">محیط اتصال</label>
+                                <select id="zarinMode" class="form-select">
+                                    <option value="production" selected>عملیاتی واقعی (Production / ZarinGate)</option>
+                                    <option value="sandbox">آزمایشی (Sandbox)</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="flex items-center justify-between p-3 rounded-2xl bg-slate-50 dark:bg-slate-900/60">
+                            <div>
+                                <p class="font-bold text-xs">زرین‌گیت مستقیم (بدون صفحه واسط)</p>
+                                <span class="text-[10px] text-slate-400">هدایت مستقیم خریدار به صفحه شاپرک بانک</span>
+                            </div>
+                            <label for="zaringateDirectToggle" class="custom-switch" title="فعال‌سازی زرین‌گیت مستقیم">
+                                <span class="sr-only">زرین‌گیت مستقیم</span>
+                                <input id="zaringateDirectToggle" type="checkbox" checked aria-label="زرین‌گیت مستقیم" />
+                                <span class="slider-round" aria-hidden="true"></span>
+                            </label>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Mellat Gateway Settings -->
+                <section class="panel">
+                    <div class="flex items-center justify-between pb-4 border-b border-slate-200 dark:border-slate-800 mb-4">
+                        <div class="flex items-center gap-3">
+                            <div class="flex h-10 w-10 items-center justify-center rounded-xl bg-rose-500/10 text-rose-500 font-bold">
+                                <i class="fa-solid fa-building-columns text-lg"></i>
+                            </div>
+                            <div>
+                                <h4 class="font-black text-base">به‌پرداخت ملت (Mellat IPG)</h4>
+                                <p class="text-xs text-slate-400">ترمینال و نام کاربری اختصاصی شاپرک بانک ملت</p>
+                            </div>
+                        </div>
+
+                        <label for="mellatActiveToggle" class="custom-switch" title="فعال یا غیرفعال کردن درگاه ملت">
+                            <span class="sr-only">فعال‌سازی درگاه به‌پرداخت ملت</span>
+                            <input id="mellatActiveToggle" type="checkbox" checked aria-label="فعال‌سازی درگاه به‌پرداخت ملت" />
+                            <span class="slider-round" aria-hidden="true"></span>
+                        </label>
+                    </div>
+
+                    <div class="grid grid-cols-1 gap-4 sm:grid-cols-3">
+                        <div class="form-group">
+                            <label class="form-label" for="terminalId">شماره ترمینال (Terminal ID)</label>
+                            <input id="terminalId" type="text" value="7891024" class="form-input font-mono" />
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label" for="mellatUser">نام کاربری وب‌سرویس</label>
+                            <input id="mellatUser" type="text" value="mellat_corp_user" class="form-input font-mono" />
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label" for="mellatPass">رمز عبور اختصاصی</label>
+                            <input id="mellatPass" type="password" value="••••••••••••" class="form-input font-mono" />
+                        </div>
+                    </div>
+                </section>
+            </div>
+
+            <!-- Tab 3: Tax & Legal -->
+            <div id="tab-tax" class="tab-content space-y-6">
+                <section class="panel">
+                    <h4 class="font-black text-base mb-4">قوانین مالیاتی و سامانه مودیان</h4>
+
+                    <div class="space-y-4">
+                        <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
+                            <div class="form-group">
+                                <label class="form-label" for="vatRate">نرخ مالیات بر ارزش افزوده (VAT)</label>
+                                <div class="relative">
+                                    <input id="vatRate" type="number" value="10" class="form-input pl-8" />
+                                    <span class="absolute left-3 top-2.5 text-xs text-slate-400 font-bold">٪ درصد</span>
+                                </div>
+                                <span class="form-hint">نرخ قانونی مصوب سال ۱۴۰۳</span>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="form-label" for="taxMemoryId">شناسه یکتای حافظه مالیاتی</label>
+                                <input id="taxMemoryId" type="text" value="A1290B" class="form-input font-mono" />
+                                <span class="form-hint">دریافت شده از کارپوشه سامانه مودیان سازمان امور مالیاتی</span>
+                            </div>
+                        </div>
+
+                        <div class="flex items-center justify-between p-3.5 rounded-2xl bg-slate-50 dark:bg-slate-900/60">
+                            <div>
+                                <p class="font-bold text-xs">صدور خودکار صورت‌حساب الکترونیکی نوع ۱</p>
+                                <span class="text-[10px] text-slate-400">ارسال فاکتورهای با مبلغ بالای ۱۰ میلیون تومان به سامانه مودیان به طور آنی</span>
+                            </div>
+                            <label for="autoTaxInvoiceToggle" class="custom-switch" title="صدور خودکار صورت‌حساب الکترونیکی نوع ۱">
+                                <span class="sr-only">صدور خودکار صورت‌حساب الکترونیکی نوع ۱</span>
+                                <input id="autoTaxInvoiceToggle" type="checkbox" checked aria-label="صدور خودکار صورت‌حساب الکترونیکی نوع ۱" />
+                                <span class="slider-round" aria-hidden="true"></span>
+                            </label>
+                        </div>
+
+                        <div class="flex items-center justify-between p-3.5 rounded-2xl bg-slate-50 dark:bg-slate-900/60">
+                            <div>
+                                <p class="font-bold text-xs">ثبت مالیات در قیمت نهایی سبد خرید</p>
+                                <span class="text-[10px] text-slate-400">نمایش قیمت‌ها با احتساب ۱۰٪ مالیات ارزش افزوده</span>
+                            </div>
+                            <label for="includeVatPriceToggle" class="custom-switch" title="ثبت مالیات در قیمت نهایی سبد خرید">
+                                <span class="sr-only">ثبت مالیات در قیمت نهایی سبد خرید</span>
+                                <input id="includeVatPriceToggle" type="checkbox" checked aria-label="ثبت مالیات در قیمت نهایی سبد خرید" />
+                                <span class="slider-round" aria-hidden="true"></span>
+                            </label>
+                        </div>
+                    </div>
+                </section>
+            </div>
+
+            <!-- Tab 4: Notifications & SMS -->
+            <div id="tab-notifications" class="tab-content space-y-6">
+                <section class="panel">
+                    <h4 class="font-black text-base mb-4">تنظیمات درگاه پیامک و اطلاع‌رسانی</h4>
+
+                    <div class="space-y-4">
+                        <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
+                            <div class="form-group">
+                                <label class="form-label" for="smsProvider">ارائه‌دهنده سرویس پیامکی</label>
+                                <select id="smsProvider" class="form-select">
+                                    <option value="kavenegar" selected>کاوه‌نگار (Kavenegar API)</option>
+                                    <option value="melipayamak">ملی‌پیامک</option>
+                                    <option value="farazsms">فراز اس‌ام‌اس</option>
+                                </select>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="form-label" for="smsApiKey">کلید وب‌سرویس (API Key)</label>
+                                <input id="smsApiKey" type="password" value="4F583920194820A••••••••" class="form-input font-mono" />
+                            </div>
+                        </div>
+
+                        <div class="space-y-2.5">
+                            <div class="flex items-center justify-between p-3 rounded-2xl bg-slate-50 dark:bg-slate-900/60">
+                                <div>
+                                    <p class="font-bold text-xs">پیامک واریز و تسویه موفق به خریدار</p>
+                                    <span class="text-[10px] text-slate-400">ارسال شماره پیگیری شاپرک و لینک فاکتور</span>
+                                </div>
+                                <label for="smsSuccessToggle" class="custom-switch" title="پیامک واریز و تسویه موفق به خریدار">
+                                    <span class="sr-only">پیامک واریز و تسویه موفق به خریدار</span>
+                                    <input id="smsSuccessToggle" type="checkbox" checked aria-label="پیامک واریز و تسویه موفق به خریدار" />
+                                    <span class="slider-round" aria-hidden="true"></span>
+                                </label>
+                            </div>
+
+                            <div class="flex items-center justify-between p-3 rounded-2xl bg-slate-50 dark:bg-slate-900/60">
+                                <div>
+                                    <p class="font-bold text-xs">هشدار تراکنش‌های پرحجم به مدیر (بالای ۵۰M)</p>
+                                    <span class="text-[10px] text-slate-400">اطلاع‌رسانی فوری پیامکی به مدیر سیستم</span>
+                                </div>
+                                <label for="smsAdminAlertToggle" class="custom-switch" title="هشدار تراکنش‌های پرحجم به مدیر">
+                                    <span class="sr-only">هشدار تراکنش‌های پرحجم به مدیر</span>
+                                    <input id="smsAdminAlertToggle" type="checkbox" checked aria-label="هشدار تراکنش‌های پرحجم به مدیر" />
+                                    <span class="slider-round" aria-hidden="true"></span>
+                                </label>
+                            </div>
+
+                            <div class="flex items-center justify-between p-3 rounded-2xl bg-slate-50 dark:bg-slate-900/60">
+                                <div>
+                                    <p class="font-bold text-xs">ایمیل هفتگی تراز مالی به حسابدار ارشد</p>
+                                    <span class="text-[10px] text-slate-400">ارسال فایل اکسل گردش حساب هر جمعه</span>
+                                </div>
+                                <label for="emailWeeklyReportToggle" class="custom-switch" title="ایمیل هفتگی تراز مالی به حسابدار ارشد">
+                                    <span class="sr-only">ایمیل هفتگی تراز مالی به حسابدار ارشد</span>
+                                    <input id="emailWeeklyReportToggle" type="checkbox" checked aria-label="ایمیل هفتگی تراز مالی به حسابدار ارشد" />
+                                    <span class="slider-round" aria-hidden="true"></span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </div>
+
+            <!-- Tab 5: Security & Sessions -->
+            <div id="tab-security" class="tab-content space-y-6">
+                <section class="panel">
+                    <h4 class="font-black text-base mb-4">لایه‌های امنیتی حساب و دسترسی‌ها</h4>
+
+                    <div class="space-y-4">
+                        <div class="flex items-center justify-between p-3.5 rounded-2xl bg-slate-50 dark:bg-slate-900/60">
+                            <div>
+                                <p class="font-bold text-xs">تایید هویت دو مرحله‌ای (2FA SMS / TOTP)</p>
+                                <span class="text-[10px] text-slate-400">الزام ورود رمز یک‌بار مصرف برای دسترسی به بخش‌های مالی</span>
+                            </div>
+                            <label for="twoFactorToggle" class="custom-switch" title="تایید هویت دو مرحله‌ای">
+                                <span class="sr-only">تایید هویت دو مرحله‌ای</span>
+                                <input id="twoFactorToggle" type="checkbox" checked aria-label="تایید هویت دو مرحله‌ای" />
+                                <span class="slider-round" aria-hidden="true"></span>
+                            </label>
+                        </div>
+
+                        <div class="flex items-center justify-between p-3.5 rounded-2xl bg-slate-50 dark:bg-slate-900/60">
+                            <div>
+                                <p class="font-bold text-xs">قفل خودکار نشست پس از ۱۰ دقیقه بی‌تحرکی</p>
+                                <span class="text-[10px] text-slate-400">محافظت از نشست‌های فعال در محیط‌های عمومی</span>
+                            </div>
+                            <label for="autoLockSessionToggle" class="custom-switch" title="قفل خودکار نشست پس از ۱۰ دقیقه بی‌تحرکی">
+                                <span class="sr-only">قفل خودکار نشست پس از ۱۰ دقیقه بی‌تحرکی</span>
+                                <input id="autoLockSessionToggle" type="checkbox" checked aria-label="قفل خودکار نشست پس از ۱۰ دقیقه بی‌تحرکی" />
+                                <span class="slider-round" aria-hidden="true"></span>
+                            </label>
+                        </div>
+
+                        <div class="pt-3 border-t border-slate-200 dark:border-slate-800">
+                            <h5 class="font-bold text-xs mb-2">نشست‌های فعال سیستم (Active Sessions):</h5>
+                            <div class="flex items-center justify-between rounded-xl border border-slate-200 p-3 dark:border-slate-800 text-xs">
+                                <div class="flex items-center gap-2.5">
+                                    <i class="fa-solid fa-laptop text-emerald-500 text-base"></i>
+                                    <div>
+                                        <p class="font-bold">ویندوز ۱۰ • کروم ۱۲۸ (دستگاه فعلی)</p>
+                                        <p class="text-[10px] text-slate-400 font-mono">IP: 185.120.44.12 • تهران، ایران</p>
+                                    </div>
+                                </div>
+                                <span class="badge success">آنلاین / فعال</span>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </div>
+
+        </section>
+    </main>
+
+    <!-- Scripts -->
+    <script src="../assets/js/dashboard.js"></script>
+    <script src="../assets/icons/toggle.js"></script>
+</body>
+
+</html>

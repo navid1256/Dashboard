@@ -1,0 +1,19 @@
+{
+    "name": "dashboard",
+    "version": "1.0.0",
+    "description": "",
+    "main": "tailwind.config.js",
+    "scripts": {
+        "test": "echo \"Error: no test specified\" \u0026\u0026 exit 1",
+        "build:css": "tailwindcss -i ./assets/css/input.css -o ./assets/css/output.css \u0026\u0026 node ./scripts/fix-css-compat.js",
+        "build": "npm run build:css"
+    },
+    "keywords": [],
+    "author": "",
+    "license": "ISC",
+    "type": "commonjs",
+    "dependencies": {
+        "@tailwindcss/cli": "^4.3.1",
+        "tailwindcss": "^4.3.1"
+    }
+}
