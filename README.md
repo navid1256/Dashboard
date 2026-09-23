@@ -42,17 +42,20 @@
 ## 🚀 راه‌اندازی لوکال (Quick Start)
 
 ۱. کلون کردن مخزن:
+
 ```bash
 git clone https://github.com/USERNAME/REPO_NAME.git
 cd REPO_NAME
 ```
 
 ۲. نصب وابستگی‌های پکیج‌ها:
+
 ```bash
 npm install
 ```
 
 ۳. اجرای دستور بیلد استایل‌های تیلویند:
+
 ```bash
 npm run build
 ```
